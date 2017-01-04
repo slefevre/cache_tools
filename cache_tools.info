@@ -1,0 +1,4 @@
+name = Cache Tools
+description = A set of functions to aid the use of caching
+core = 7.x
+package = Steves
