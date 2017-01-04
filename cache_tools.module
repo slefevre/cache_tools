@@ -1,0 +1,19 @@
+<?php
+
+function cache_tools_set( $key, $function, array $arguments, $bin='cache', $expire=CACHE_PERMANENT, $static=TRUE, $cache=TRUE ) {
+
+  $data = $function($arguments);
+
+  if ( $static ) {
+
+  }
+
+  if ( $cache ) {
+    cache_set($key, $data, $bin, $expire);
+  }
+
+}
+
+function cache_tools_get($key, $bin='cache') {
+
+}
