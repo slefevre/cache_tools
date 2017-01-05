@@ -1,41 +1,36 @@
 <?php
 
-function cache_tools_cache($callback, $bin='cache', $expire=CACHE_PERMANENT, $reset=FALSE) {
+function cache_tools_cache($function, array $arguments=NULL, $bin='cache', $expire=CACHE_PERMANENT, $reset=FALSE ) {
 
-  if ( $reset ) {
-    drupal_static_reset($callback);
-    cache_clear_all($callback, $bin);
+  if ( ! is_callable($function) ) {
+    throw new Exception('You must pass a function name to ' . __FUNCTION__ . '.');
   }
 
-  $data = &drupal_static($callback);
+  if ( is_object($function) ) {
+  // we know it's callable, so this must be a closure
+    throw new Exception('You must pass a function name, not a closure, to ' . __FUNCTION__ . '.');
+  }
+
+  echo gettype($function);
+
+  $key = md5(serialize(array($function,$arguments)));
+
+  if ( $reset ) {
+    drupal_static_reset($key);
+    cache_clear_all($key, $bin);
+  }
+
+  $data = &drupal_static($key);
 
   if ( ! isset($data) ) {
-    if ($cache = cache_get($callback)) {
+    if ($cache = cache_get($key)) {
       $data = $cache->data;
     }
     else {
-      $data = $callback;
-      cache_set($callback, $data, $bin, $expire);
+      $data = $function($arguments);
+      cache_set($key, $data, $bin, $expire);
     }
   }
 
   return $data;
-}
-
-function cache_tools_set( $key, $function, array $arguments, $bin='cache', $expire=CACHE_PERMANENT, $static=TRUE, $cache=TRUE ) {
-
-  $data = $function($arguments);
-
-  if ( $static ) {
-
-  }
-
-  if ( $cache ) {
-    cache_set($key, $data, $bin, $expire);
-  }
-
-}
-
-function cache_tools_get($key, $bin='cache') {
-
 }
