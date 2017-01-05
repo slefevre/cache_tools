@@ -11,8 +11,6 @@ function cache_tools_cache($function, array $arguments=NULL, $bin='cache', $expi
     throw new Exception('You must pass a function name, not a closure, to ' . __FUNCTION__ . '.');
   }
 
-  echo gettype($function);
-
   $key = md5(serialize(array($function,$arguments)));
 
   if ( $reset ) {
