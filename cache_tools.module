@@ -2,13 +2,10 @@
 
 function cache_tools_cache($function, array $arguments=NULL, $bin='cache', $expire=CACHE_PERMANENT, $reset=FALSE ) {
 
-  if ( ! is_callable($function) ) {
-    throw new Exception('You must pass a function name to ' . __FUNCTION__ . '.');
-  }
-
-  if ( is_object($function) ) {
-  // we know it's callable, so this must be a closure
-    throw new Exception('You must pass a function name, not a closure, to ' . __FUNCTION__ . '.');
+  if ( ! is_callable($function)
+    || is_object($function) ) {
+    // we know it's callable, so this must be a closure
+    throw new InvalidArgumentException('You must pass a string function name (and not a closure) to ' . __FUNCTION__ . '.');
   }
 
   $key = md5(serialize(array($function,$arguments)));
