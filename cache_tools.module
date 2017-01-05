@@ -1,5 +1,27 @@
 <?php
 
+function cache_tools_cache($callback, $bin='cache', $expire=CACHE_PERMANENT, $reset=FALSE) {
+
+  if ( $reset ) {
+    drupal_static_reset($callback);
+    cache_clear_all($callback, $bin);
+  }
+
+  $data = &drupal_static($callback);
+
+  if ( ! isset($data) ) {
+    if ($cache = cache_get($callback)) {
+      $data = $cache->data;
+    }
+    else {
+      $data = $callback;
+      cache_set($callback, $data, $bin, $expire);
+    }
+  }
+
+  return $data;
+}
+
 function cache_tools_set( $key, $function, array $arguments, $bin='cache', $expire=CACHE_PERMANENT, $static=TRUE, $cache=TRUE ) {
 
   $data = $function($arguments);
