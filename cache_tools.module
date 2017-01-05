@@ -2,6 +2,14 @@
 
 function cache_tools_cache($function, array $arguments=NULL, $bin='cache', $expire=CACHE_PERMANENT, $reset=FALSE ) {
 
+  if ( is_null($bin) ) {
+    $bin = 'cache';
+  }
+
+  if ( is_null($expire) ) {
+    $expire = CACHE_PERMANENT;
+  }
+
   if ( ! is_callable($function)
     || is_object($function) ) {
     // we know it's callable, so this must be a closure
