@@ -13,12 +13,21 @@ try {
 }
 
 function sleep_and_set() {
-  sleep(5);
+  sleep(15);
   return mt_rand();
+}
+try {
+  cache_tools_cache('sleep_and_set');
+  echo cache_tools_cache('sleep_and_set') . "\n";
+  echo cache_tools_cache('sleep_and_set') . "\n";
+  echo cache_tools_cache('sleep_and_set') . "\n";
+} catch (exception $e ) {
+  echo 'Caught exception \'' . $e->getMessage() . "'.\n";
 }
 
 try {
-  cache_tools_cache('sleep_and_set');
+  // reset the cache
+  cache_tools_cache('sleep_and_set', NULL, NULL, NULL, TRUE);
   echo cache_tools_cache('sleep_and_set') . "\n";
   echo cache_tools_cache('sleep_and_set') . "\n";
   echo cache_tools_cache('sleep_and_set') . "\n";
